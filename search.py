@@ -166,9 +166,34 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
 
     util.raiseNotDefined()
 
+def greedySearch(problem: SearchProblem, heuristic=nullHeuristic):
+    """Search the node that has the lowest combined cost and heuristic first."""
+    queue = util.PriorityQueue()
+    visited = list()
+    path = list()
+    startState = problem.getStartState()
+    if problem.isGoalState(startState):
+        return list()
 
+    queue.push((startState, []), 0)
+    while not queue.isEmpty():
+        position, path = queue.pop()
+        if problem.isGoalState(position):
+            return path
+        nextMoves = problem.getSuccessors(position)
+        for move in nextMoves:
+            moveCoordinates = move[0]
+            movePosition = move[1]
+
+            if moveCoordinates not in visited:
+                visited.append(moveCoordinates)
+                newPath = path + [movePosition]
+                queue.push((moveCoordinates, newPath), heuristic(moveCoordinates, problem))
+
+    util.raiseNotDefined()
 
 # Abbreviations
+greedy = greedySearch
 bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
