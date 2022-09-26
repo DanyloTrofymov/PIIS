@@ -92,7 +92,7 @@ def depthFirstSearch(problem: SearchProblem):
 
     util.raiseNotDefined()
 
-def breadthFirstSearch1(problem: SearchProblem):
+def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
 
@@ -130,14 +130,46 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
-def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic()):
+def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    "*** YOUR CODE HERE ***"
+    queue = util.PriorityQueue()
+    visited = list()
+    startState = problem.getStartState()
+    if problem.isGoalState(startState):
+        return list()
+
+    queue.push((startState, [], 0), 0)
+    while(not queue.isEmpty()):
+        position, path, cost = queue.pop()
+        if problem.isGoalState(position):
+            return path
+        nextMoves = problem.getSuccessors(position)
+        for move in nextMoves:
+            moveCoordinates = move[0]
+            movePosition = move[1]
+
+            newPath = path + [movePosition]
+            newCost = problem.getCostOfActions(newPath)
+
+            newNode = (moveCoordinates, newPath, newCost)
+
+            alreadyVisited = False
+            for visitedNode in visited:
+                visitedNodeCoordinates, visitedNodeCost = visitedNode
+
+                if moveCoordinates == visitedNodeCoordinates and newCost >= visitedNodeCost:
+                    alreadyVisited = True
+
+            if not alreadyVisited:
+                visited.append((moveCoordinates, newCost))
+                queue.push(newNode, newCost + heuristic(moveCoordinates, problem))
+
     util.raiseNotDefined()
 
 
+
 # Abbreviations
-bfs = breadthFirstSearch1
+bfs = breadthFirstSearch
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch
