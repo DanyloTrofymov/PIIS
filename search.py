@@ -87,11 +87,35 @@ def depthFirstSearch(problem: SearchProblem):
     print("Start's successors:", problem.getSuccessors(problem.getStartState()))
     """
     "*** YOUR CODE HERE ***"
+
+
+
     util.raiseNotDefined()
 
-def breadthFirstSearch(problem: SearchProblem):
+def breadthFirstSearch1(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
     "*** YOUR CODE HERE ***"
+
+    startState = problem.getStartState()
+    queue = util.Queue()
+    visited = list()
+    path = {startState: list()}
+    queue.push(startState)
+
+    while not queue.isEmpty():
+        state = queue.pop()
+
+        if problem.isGoalState(state):
+            return path[state]
+
+        if state not in visited:
+            nextMoves = problem.getSuccessors(state)
+            for successor in nextMoves:
+                if not successor[0] in path:
+                    path[successor[0]] = path[state] + [successor[1]]
+                    queue.push(successor[0])
+        visited.append(state)
+
     util.raiseNotDefined()
 
 def uniformCostSearch(problem: SearchProblem):
@@ -106,14 +130,14 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
-def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
+def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic()):
     """Search the node that has the lowest combined cost and heuristic first."""
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
 
 # Abbreviations
-bfs = breadthFirstSearch
+bfs = breadthFirstSearch1
 dfs = depthFirstSearch
 astar = aStarSearch
 ucs = uniformCostSearch

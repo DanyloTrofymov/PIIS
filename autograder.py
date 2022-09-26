@@ -22,7 +22,7 @@ import sys
 import projectParams
 import random
 random.seed(0)
-try: 
+try:
     from pacman import GameState
 except:
     pass
@@ -126,7 +126,7 @@ def loadModuleString(moduleSource):
     #f = StringIO(moduleCodeDict[k])
     #tmp = imp.load_module(k, f, k, (".py", "r", imp.PY_SOURCE))
     tmp = imp.new_module(k)
-    exec(moduleCodeDict[k] in tmp.__dict__)
+    exec(moduleCodeDict[k] in imp.__dict__)
     setModuleName(tmp, k)
     return tmp
 
