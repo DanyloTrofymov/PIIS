@@ -132,55 +132,63 @@ def nullHeuristic(state, problem=None):
 
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    queue = util.PriorityQueue()
+    pQueue = util.PriorityQueue()
     visited = list()
     startState = problem.getStartState()
     if problem.isGoalState(startState):
         return list()
 
-    queue.push((startState, [], 0), 0)
-    while(not queue.isEmpty()):
-        position, path, cost = queue.pop()
-        if problem.isGoalState(position):
-            return path
-        nextMoves = problem.getSuccessors(position)
-        for move in nextMoves:
-            coordinates = move[0]
-            position = move[1]
+    pQueue.push((startState, [], 0), 0)
+    while not pQueue.isEmpty():
+        position, path, prevCost = pQueue.pop()
 
-            newPath = path + [position]
-            newCost = problem.getCostOfActions(newPath)
+        if position not in visited:
+            visited.append(position)
 
-            newCell = (coordinates, newPath, newCost)
+            if problem.isGoalState(position):
+                return path
 
-            if coordinates not in visited or newCost < cost:
-                visited.append(coordinates)
-                queue.push(newCell, newCost + heuristic(coordinates, problem))
+            nextMoves = problem.getSuccessors(position)
+            for move in nextMoves:
+                coordinates = move[0]
+                direction = move[1]
+                cost = move[2]
+
+                newPath = path + [direction]
+                newCost = prevCost + cost
+                newCell = (coordinates, newPath, newCost)
+
+                pQueue.push(newCell,  newCost + heuristic(coordinates, problem))
 
     util.raiseNotDefined()
 
 def greedySearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    queue = util.PriorityQueue()
+    pQueue = util.PriorityQueue()
     visited = list()
     startState = problem.getStartState()
     if problem.isGoalState(startState):
         return list()
 
-    queue.push((startState, []), 0)
-    while not queue.isEmpty():
-        position, path = queue.pop()
+    pQueue.push((startState, []), 0)
+    while not pQueue.isEmpty():
+
+        position, path = pQueue.pop()
+
+        if position not in visited:
+            visited.append(position)
+
         if problem.isGoalState(position):
             return path
+
         nextMoves = problem.getSuccessors(position)
         for move in nextMoves:
             coordinates = move[0]
-            position = move[1]
-
+            direction = move[1]
             if coordinates not in visited:
                 visited.append(coordinates)
-                newPath = path + [position]
-                queue.push((coordinates, newPath), heuristic(coordinates, problem))
+                newPath = path + [direction]
+                pQueue.push((coordinates, newPath), heuristic(coordinates, problem))
 
     util.raiseNotDefined()
 
