@@ -149,10 +149,10 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
                 return path
 
             nextMoves = problem.getSuccessors(position)
-            for move in nextMoves:
-                coordinates = move[0]
-                direction = move[1]
-                cost = move[2]
+            for successor in nextMoves:
+                coordinates = successor[0]
+                direction = successor[1]
+                cost = successor[2]
 
                 newPath = path + [direction]
                 newCost = prevCost + cost
@@ -182,9 +182,9 @@ def greedySearch(problem: SearchProblem, heuristic=nullHeuristic):
             return path
 
         nextMoves = problem.getSuccessors(position)
-        for move in nextMoves:
-            coordinates = move[0]
-            direction = move[1]
+        for successor in nextMoves:
+            coordinates = successor[0]
+            direction = successor[1]
             if coordinates not in visited:
                 visited.append(coordinates)
                 newPath = path + [direction]
