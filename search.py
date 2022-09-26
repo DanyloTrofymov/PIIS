@@ -145,24 +145,17 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
             return path
         nextMoves = problem.getSuccessors(position)
         for move in nextMoves:
-            moveCoordinates = move[0]
-            movePosition = move[1]
+            coordinates = move[0]
+            position = move[1]
 
-            newPath = path + [movePosition]
+            newPath = path + [position]
             newCost = problem.getCostOfActions(newPath)
 
-            newNode = (moveCoordinates, newPath, newCost)
+            newCell = (coordinates, newPath, newCost)
 
-            alreadyVisited = False
-            for visitedNode in visited:
-                visitedNodeCoordinates, visitedNodeCost = visitedNode
-
-                if moveCoordinates == visitedNodeCoordinates and newCost >= visitedNodeCost:
-                    alreadyVisited = True
-
-            if not alreadyVisited:
-                visited.append((moveCoordinates, newCost))
-                queue.push(newNode, newCost + heuristic(moveCoordinates, problem))
+            if coordinates not in visited or newCost < cost:
+                visited.append(coordinates)
+                queue.push(newCell, newCost + heuristic(coordinates, problem))
 
     util.raiseNotDefined()
 
@@ -170,7 +163,6 @@ def greedySearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
     queue = util.PriorityQueue()
     visited = list()
-    path = list()
     startState = problem.getStartState()
     if problem.isGoalState(startState):
         return list()
@@ -182,13 +174,13 @@ def greedySearch(problem: SearchProblem, heuristic=nullHeuristic):
             return path
         nextMoves = problem.getSuccessors(position)
         for move in nextMoves:
-            moveCoordinates = move[0]
-            movePosition = move[1]
+            coordinates = move[0]
+            position = move[1]
 
-            if moveCoordinates not in visited:
-                visited.append(moveCoordinates)
-                newPath = path + [movePosition]
-                queue.push((moveCoordinates, newPath), heuristic(moveCoordinates, problem))
+            if coordinates not in visited:
+                visited.append(coordinates)
+                newPath = path + [position]
+                queue.push((coordinates, newPath), heuristic(coordinates, problem))
 
     util.raiseNotDefined()
 
