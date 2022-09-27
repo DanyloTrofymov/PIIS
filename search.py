@@ -108,10 +108,10 @@ def breadthFirstSearch(problem: SearchProblem):
 
         if state not in visited:
             nextMoves = problem.getSuccessors(state)
-            for successor in nextMoves:
-                if not successor[0] in path:
-                    path[successor[0]] = path[state] + [successor[1]]
-                    queue.push(successor[0])
+            for coordinates, direction, cost in nextMoves:
+                if not coordinates in path:
+                    path[coordinates] = path[state] + [direction]
+                    queue.push(coordinates)
         visited.append(state)
 
 
@@ -146,10 +146,7 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
                 return path
 
             nextMoves = problem.getSuccessors(position)
-            for successor in nextMoves:
-                coordinates = successor[0]
-                direction = successor[1]
-                cost = successor[2]
+            for coordinates, direction, cost in nextMoves:
 
                 newPath = path + [direction]
                 newCost = prevCost + cost
@@ -179,9 +176,7 @@ def greedySearch(problem: SearchProblem, heuristic=nullHeuristic):
             return path
 
         nextMoves = problem.getSuccessors(position)
-        for successor in nextMoves:
-            coordinates = successor[0]
-            direction = successor[1]
+        for coordinates, direction, cost in nextMoves:
             if coordinates not in visited:
                 visited.append(coordinates)
                 newPath = path + [direction]
