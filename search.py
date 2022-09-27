@@ -19,6 +19,7 @@ Pacman agents (in searchAgents.py).
 
 import util
 
+
 class SearchProblem:
     """
     This class outlines the structure of a search problem, but doesn't implement
@@ -70,7 +71,8 @@ def tinyMazeSearch(problem):
     from game import Directions
     s = Directions.SOUTH
     w = Directions.WEST
-    return  [s, s, w, s, w, w, s, w]
+    return [s, s, w, s, w, w, s, w]
+
 
 def depthFirstSearch(problem: SearchProblem):
     """
@@ -88,17 +90,16 @@ def depthFirstSearch(problem: SearchProblem):
     """
     "*** YOUR CODE HERE ***"
 
-
-
     util.raiseNotDefined()
+
 
 def breadthFirstSearch(problem: SearchProblem):
     """Search the shallowest nodes in the search tree first."""
-    startState = problem.getStartState()
+    start_state = problem.getStartState()
     queue = util.Queue()
     visited = list()
-    path = {startState: list()}
-    queue.push(startState)
+    path = {start_state: list()}
+    queue.push(start_state)
 
     while not queue.isEmpty():
         state = queue.pop()
@@ -107,8 +108,8 @@ def breadthFirstSearch(problem: SearchProblem):
             return path[state]
 
         if state not in visited:
-            nextMoves = problem.getSuccessors(state)
-            for coordinates, direction, cost in nextMoves:
+            next_moves = problem.getSuccessors(state)
+            for coordinates, direction, cost in next_moves:
                 if not coordinates in path:
                     path[coordinates] = path[state] + [direction]
                     queue.push(coordinates)
@@ -120,6 +121,7 @@ def uniformCostSearch(problem: SearchProblem):
     "*** YOUR CODE HERE ***"
     util.raiseNotDefined()
 
+
 def nullHeuristic(state, problem=None):
     """
     A heuristic function estimates the cost from the current state to the nearest
@@ -127,17 +129,18 @@ def nullHeuristic(state, problem=None):
     """
     return 0
 
+
 def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    pQueue = util.PriorityQueue()
+    p_queue = util.PriorityQueue()
     visited = list()
-    startState = problem.getStartState()
-    if problem.isGoalState(startState):
+    start_state = problem.getStartState()
+    if problem.isGoalState(start_state):
         return list()
 
-    pQueue.push((startState, [], 0), 0)
-    while not pQueue.isEmpty():
-        position, path, prevCost = pQueue.pop()
+    p_queue.push((start_state, [], 0), 0)
+    while not p_queue.isEmpty():
+        position, path, prev_cost = p_queue.pop()
 
         if position not in visited:
             visited.append(position)
@@ -145,29 +148,29 @@ def aStarSearch(problem: SearchProblem, heuristic=nullHeuristic):
             if problem.isGoalState(position):
                 return path
 
-            nextMoves = problem.getSuccessors(position)
-            for coordinates, direction, cost in nextMoves:
+            next_moves = problem.getSuccessors(position)
+            for coordinates, direction, cost in next_moves:
+                new_path = path + [direction]
+                new_cost = prev_cost + cost
+                new_cell = (coordinates, new_path, new_cost)
 
-                newPath = path + [direction]
-                newCost = prevCost + cost
-                newCell = (coordinates, newPath, newCost)
-
-                pQueue.push(newCell,  newCost + heuristic(coordinates, problem))
+                p_queue.push(new_cell, new_cost + heuristic(coordinates, problem))
 
     util.raiseNotDefined()
 
+
 def greedySearch(problem: SearchProblem, heuristic=nullHeuristic):
     """Search the node that has the lowest combined cost and heuristic first."""
-    pQueue = util.PriorityQueue()
+    p_queue = util.PriorityQueue()
     visited = list()
-    startState = problem.getStartState()
-    if problem.isGoalState(startState):
+    start_state = problem.getStartState()
+    if problem.isGoalState(start_state):
         return list()
 
-    pQueue.push((startState, []), 0)
-    while not pQueue.isEmpty():
+    p_queue.push((start_state, []), 0)
+    while not p_queue.isEmpty():
 
-        position, path = pQueue.pop()
+        position, path = p_queue.pop()
 
         if position not in visited:
             visited.append(position)
@@ -175,14 +178,15 @@ def greedySearch(problem: SearchProblem, heuristic=nullHeuristic):
         if problem.isGoalState(position):
             return path
 
-        nextMoves = problem.getSuccessors(position)
-        for coordinates, direction, cost in nextMoves:
+        next_moves = problem.getSuccessors(position)
+        for coordinates, direction, cost in next_moves:
             if coordinates not in visited:
                 visited.append(coordinates)
-                newPath = path + [direction]
-                pQueue.push((coordinates, newPath), heuristic(coordinates, problem))
+                new_path = path + [direction]
+                p_queue.push((coordinates, new_path), heuristic(coordinates, problem))
 
     util.raiseNotDefined()
+
 
 # Abbreviations
 greedy = greedySearch

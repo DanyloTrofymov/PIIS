@@ -389,9 +389,9 @@ class FoodSearchProblem:
             dx, dy = Actions.directionToVector(direction)
             nextx, nexty = int(x + dx), int(y + dy)
             if not self.walls[nextx][nexty]:
-                nextFood = state[1].copy()
-                nextFood[nextx][nexty] = False
-                successors.append( ( ((nextx, nexty), nextFood), direction, 1) )
+                next_food = state[1].copy()
+                next_food[nextx][nexty] = False
+                successors.append( ( ((nextx, nexty), next_food), direction, 1) )
         return successors
 
     def getCostOfActions(self, actions):
@@ -442,26 +442,26 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, foodGrid = state
+    position, food_grid = state
 
-    def NextFood(position, foodList):
-        nextFood = foodList[0]
-        maxCost = util.manhattanDistance(position, nextFood)
-        for food in foodList[1:]:
+    def NextFood(position, food_list):
+        next_food = food_list[0]
+        max_cost = util.manhattanDistance(position, next_food)
+        for food in food_list[1:]:
             cost = util.manhattanDistance(position, food)
-            if maxCost < cost:
-                maxCost = cost
-                nextFood = food
+            if max_cost < cost:
+                max_cost = cost
+                next_food = food
 
-        return nextFood
+        return next_food
 
-    foodList = foodGrid.asList()
-    if len(foodList) == 0:
+    food_list = food_grid.asList()
+    if len(food_list) == 0:
         return 0
 
-    nextFood = NextFood(position, foodList)
+    next_food = NextFood(position, food_list)
 
-    return util.manhattanDistance(position, nextFood)
+    return util.manhattanDistance(position, next_food)
 
 class ClosestDotSearchAgent(SearchAgent):
     "Search for all food using a sequence of searches"
