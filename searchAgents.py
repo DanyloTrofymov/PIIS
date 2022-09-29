@@ -317,12 +317,12 @@ class CornersProblem(search.SearchProblem):
             # Add a successor state to the successor list if the action is legal
             x,y = st
             dx, dy = Actions.directionToVector(action)
-            nextx, nexty = int(x + dx), int(y + dy)
-            if not self.walls[nextx][nexty]:
-                nextPos = (nextx, nexty)
-                nextState = (nextPos, tuple(i for i in corners if i != nextPos))
-                cost= self.costFn(nextPos)
-                successors.append((nextState, action, cost))
+            next_x, next_y = int(x + dx), int(y + dy)
+            if not self.walls[next_x][next_y]:
+                next_pos = (next_x, next_y)
+                next_state = (next_pos, tuple(i for i in corners if i != next_pos))
+                cost = self.costFn(next_pos)
+                successors.append((next_state, action, cost))
         self._expanded += 1
         return successors
 
@@ -442,7 +442,6 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
     Subsequent calls to this heuristic can access
     problem.heuristicInfo['wallCount']
     """
-    position, food_grid = state
 
     def NextFood(position, food_list):
         next_food = food_list[0]
@@ -454,6 +453,8 @@ def foodHeuristic(state: Tuple[Tuple, List[List]], problem: FoodSearchProblem):
                 next_food = food
 
         return next_food
+
+    position, food_grid = state
 
     food_list = food_grid.asList()
     if len(food_list) == 0:
