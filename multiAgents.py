@@ -244,7 +244,42 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
     """
       Your expectimax agent (question 4)
     """
+    def expectimaxAlgo(self, state, depth, agent_index):
+        if depth == 0 or state.isWin() or state.isLose():
+            return self.evaluationFunction(state), None
+        elif agent_index == 0:
+            return self.maximize(state, depth, agent_index)
+        else:
+            return self.expectation(state, depth, agent_index)
 
+    def expectation(self, state, depth, agent_index):
+        exp_score = 0
+        exp_action = None
+        for action in state.getLegalActions(agent_index):
+            successor = state.generateSuccessor(agent_index, action)
+            if agent_index == state.getNumAgents() - 1:
+                new_score = self.expectimaxAlgo(successor, depth - 1, 0)[0]
+                exp_score += new_score
+            else:
+                new_score = self.expectimaxAlgo(successor, depth, agent_index + 1)[0]
+                exp_score += new_score
+        exp_score /= len(state.getLegalActions(agent_index))
+
+        return exp_score, exp_action
+
+    def maximize(self, state, depth, agent_index):
+        max_score = float("-inf")
+        max_action = None
+
+        for action in state.getLegalActions(agent_index):
+            successor = state.generateSuccessor(agent_index, action)
+            new_score = self.expectimaxAlgo(successor, depth, agent_index + 1)[0]
+
+            if new_score > max_score:
+                max_score = new_score
+                max_action = action
+
+        return max_score, max_action
     def getAction(self, gameState: GameState):
         """
         Returns the expectimax action using self.depth and self.evaluationFunction
@@ -253,6 +288,7 @@ class ExpectimaxAgent(MultiAgentSearchAgent):
         legal moves.
         """
         "*** YOUR CODE HERE ***"
+        return self.expectimaxAlgo(gameState, self.depth, 0)[1]
         util.raiseNotDefined()
 
 def betterEvaluationFunction(currentGameState: GameState):
