@@ -126,7 +126,7 @@ class MinimaxAgent(MultiAgentSearchAgent):
 
         for action in state.getLegalActions(agent_index):
             successor = state.generateSuccessor(agent_index, action)
-            if(agent_index == state.getNumAgents() - 1):
+            if agent_index == state.getNumAgents() - 1:
                 new_score = self.minimaxAlgo(successor, depth - 1, 0)[0]
             else:
                 new_score = self.minimaxAlgo(successor, depth, agent_index + 1)[0]
@@ -185,11 +185,59 @@ class AlphaBetaAgent(MultiAgentSearchAgent):
     Your minimax agent with alpha-beta pruning (question 3)
     """
 
+    def minimaxAlphaBetaAlgo(self, state, depth, agent_index, alpha, beta):
+        if depth == 0 or state.isWin() or state.isLose():
+            return self.evaluationFunction(state), None
+        elif agent_index == 0:
+            return self.maximize(state, depth, agent_index, alpha, beta)
+        else:
+            return self.minimize(state, depth, agent_index, alpha, beta)
+
+    def minimize(self, state, depth, agent_index, alpha, beta):
+        min_score = float('inf')
+        min_action = None
+
+        for action in state.getLegalActions(agent_index):
+            successor = state.generateSuccessor(agent_index, action)
+            if agent_index == state.getNumAgents() - 1:
+                new_score = self.minimaxAlphaBetaAlgo(successor, depth - 1, 0, alpha, beta)[0]
+            else:
+                new_score = self.minimaxAlphaBetaAlgo(successor, depth, agent_index + 1, alpha, beta)[0]
+
+            if new_score < min_score:
+                min_score = new_score
+                min_action = action
+
+            if new_score < alpha:
+                return new_score, action
+            beta = min(beta, min_score)
+
+        return min_score, min_action
+
+    def maximize(self, state, depth, agent_index, alpha, beta):
+        max_score = float("-inf")
+        max_action = None
+
+        for action in state.getLegalActions(agent_index):
+            successor = state.generateSuccessor(agent_index, action)
+            new_score = self.minimaxAlphaBetaAlgo(successor, depth, agent_index + 1, alpha, beta)[0]
+
+            if new_score > max_score:
+                max_score = new_score
+                max_action = action
+
+            if new_score > beta:
+                return new_score, action
+            alpha = max(alpha, max_score)
+
+        return max_score, max_action
+
     def getAction(self, gameState: GameState):
         """
         Returns the minimax action using self.depth and self.evaluationFunction
         """
         "*** YOUR CODE HERE ***"
+        return self.minimaxAlphaBetaAlgo(gameState, self.depth, 0, float("-inf"), float("inf"))[1]
         util.raiseNotDefined()
 
 class ExpectimaxAgent(MultiAgentSearchAgent):
