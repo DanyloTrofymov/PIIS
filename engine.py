@@ -1,5 +1,5 @@
 import chess
-from algorithms import Negamax, NegaScout
+from algorithms import Negamax, NegaScout, PVS
 
 class GameEngine:
     def __init__(self, board: chess.Board):
@@ -38,9 +38,8 @@ class GameEngine:
         if algo == "negascout":
             AI = NegaScout(self.board, aiColor, depth)
         if algo == "pvs":
-            AI = PVS(self.board, aiColor, depth)  # not implemented
+            AI = PVS(self.board, aiColor, depth)
 
-        maxDepth = depth
 
         turn = chess.WHITE
         while (not self.board.is_checkmate()):
