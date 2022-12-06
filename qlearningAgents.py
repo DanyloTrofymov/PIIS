@@ -111,7 +111,7 @@ class QLearningAgent(ReinforcementAgent):
         legalActions = self.getLegalActions(state)
         action = None
         "*** YOUR CODE HERE ***"
-        util.raiseNotDefined()
+
         if legalActions == ():
             return None
 
@@ -123,6 +123,8 @@ class QLearningAgent(ReinforcementAgent):
             action = self.computeActionFromQValues(state)
 
         return action
+
+        util.raiseNotDefined()
 
     def update(self, state, action, nextState, reward: float):
         """
