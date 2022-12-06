@@ -16,10 +16,10 @@ class Node:
 
 
 class MCTS:
-    def __init__(self, board: chess.Board, depth, color):
+    def __init__(self, board: chess.Board, color, depth):
         self.board = board
-        self.depth = depth
         self.AIcolor = color
+        self.depth = depth
 
     def select(self, current, color):
         best_child = None
@@ -72,7 +72,7 @@ class MCTS:
             temp_state.push_san(move)
             child = Node()
             child.state = temp_state
-            child.root = current
+            child.parent = current
             current.children.add(child)
         rand_state = random.choice(list(current.children))
 
@@ -81,9 +81,8 @@ class MCTS:
     def backpropagation(self, current, reward):
         current.child_visits += 1
         while current.parent is not None:
-            current.score += reward
             current.parent_visits += 1
-            current = current.root
+            current = current.parent
         current.score += reward
         return current
 
@@ -95,7 +94,7 @@ class MCTS:
 
             res = Node()
             res.state = temp_state
-            res.root = current
+            res.parent = current
             current.children.add(res)
 
             states_moves[res] = move
@@ -119,7 +118,7 @@ class MCTS:
                     selected_move = states_moves[i]
         return selected_move
 
-    def algorithm(self, depth, *args):
+    def algorithm(self, depth):
         current = Node()
         current.state = self.board
         player_color = chess.BLACK
@@ -140,6 +139,7 @@ class MCTS:
 
             reward, state = self.simulate(ex_child)
             current = self.backpropagation(state, reward)
+
             i += 1
 
         selected_move = self.select_move(current, states_moves, player_color)

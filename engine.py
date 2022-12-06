@@ -16,7 +16,7 @@ class GameEngine:
     def AIMove(self, AI, algo):
         bestMove = chess.Move.null
         bestScore = float('-inf')
-        if(algo != "mcts"):
+        if algo != "mcts":
             for move in AI.board.legal_moves:
                 AI.board.push(move)
                 score = -1 * (AI.algorithm(AI.depth, float('-inf'), float('inf')))
@@ -28,7 +28,7 @@ class GameEngine:
             print('Best move is: ', bestMove, '\n')
             self.board.push(bestMove)
         else:
-            bestMove = AI.algorithm(AI.depth, float('-inf'), float('inf'))
+            bestMove = AI.algorithm(AI.depth)
             print('Best move is: ', bestMove, '\n')
             self.board.push_san(bestMove)
 
@@ -52,7 +52,7 @@ class GameEngine:
 
 
         turn = chess.WHITE
-        while (not self.board.is_checkmate()):
+        while not self.board.is_checkmate():
             print(self.board)
             if turn != aiColor:
                 print('\nWhite move\n')
